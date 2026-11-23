@@ -363,3 +363,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between}
   .gb b{display:none}
   .gcard{break-inside:avoid;border:1px solid #c9d7ee;border-radius:8px}
 }
+/* tablas explicativas: la primera columna no se parte */
+.scroll td:first-child code{white-space:nowrap;overflow-wrap:normal}
+.scroll td code{word-break:normal}
+@media(max-width:600px){.scroll td:first-child code{white-space:normal}}
+.scroll td:nth-child(2) code{white-space:nowrap}
+@media(max-width:600px){.scroll td:nth-child(2) code{white-space:normal}}
