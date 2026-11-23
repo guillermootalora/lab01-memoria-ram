@@ -8,7 +8,6 @@ ASCII/UTF-8 (como las guarda la red y muchas estructuras de Chromium) y en UTF-1
 (como las guarda Windows y la interfaz de Edge). Genera:
   - urls_encontradas.csv        (offset, codificacion, dominio, texto)
   - urls_resumen.txt            (conteos y URLs unicas por dominio)
-  - strings_para_volatility.txt ("offset:texto") para el plugin windows.strings
 Uso: python buscar_urls.py <imagen.raw|.mem> <carpeta_salida>
 """
 import csv, mmap, os, re, sys, time, collections
@@ -79,18 +78,6 @@ def main(img, outdir):
             lineas.append('   {:>5}x  {}'.format(n, txt[:150]))
         lineas.append('')
     open(os.path.join(outdir, 'urls_resumen.txt'), 'w', encoding='utf-8').write('\n'.join(lineas))
-    # Archivo para windows.strings: primera aparicion de cada texto unico + muestras, max 1500 lineas
-    primero, resto = {}, []
-    for off, cod, dom, txt in hits:
-        if txt not in primero:
-            primero[txt] = off
-        else:
-            resto.append((off, txt))
-    sel = sorted(primero.items(), key=lambda kv: kv[1])
-    sel = [(o, t) for t, o in sel][:1200] + resto[:300]
-    with open(os.path.join(outdir, 'strings_para_volatility.txt'), 'w', encoding='ascii', errors='replace') as fs:
-        for off, txt in sorted(sel):
-            fs.write('{}:{}\n'.format(off, txt))
     print('\n'.join(lineas).encode('ascii', 'replace').decode('ascii'))
 
 if __name__ == '__main__':
